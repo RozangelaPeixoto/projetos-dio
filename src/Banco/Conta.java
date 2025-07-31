@@ -47,6 +47,7 @@ public class Conta {
         double valorUsadoChequeEspecial = valorUsadoDoChequeEspecial();
         double taxaChequeEspecial = 0.2;
         double cobrancaChequeEspecial = valorUsadoChequeEspecial * taxaChequeEspecial;
+        String msgTaxa = "Taxa do cheque especial de R$" + cobrancaChequeEspecial;
         //case: depósito cobre cheque especial e taxa
         if(deposito >= cobrancaChequeEspecial + valorUsadoChequeEspecial){
             deposito -= cobrancaChequeEspecial;
@@ -66,9 +67,13 @@ public class Conta {
         }
         //case: depósito não cobre a taxa e não tem saldo no cheque especial
         else{
+            msgTaxa += """
+                    \nDevido a falta de saldo a taxa ficou pendente.
+                    Quando houver saldo na conta ela será debitada.""";
             chequeEspecial += deposito;
             taxaPendente += cobrancaChequeEspecial;
         }
+        System.out.println(msgTaxa);
     }
 
     public void sacar(double valor){
