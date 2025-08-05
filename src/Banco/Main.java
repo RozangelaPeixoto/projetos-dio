@@ -19,6 +19,7 @@ public class Main {
             System.out.println("3 - Depositar");
             System.out.println("4 - Sacar");
             System.out.println("5 - Pagar boleto");
+            System.out.println("6 - Consultar taxa pendente");
             System.out.println("0 - Sair");
             System.out.print("Escolha uma opção: ");
             int opcao = scanner.nextInt();
@@ -36,22 +37,23 @@ public class Main {
                     System.out.println("\n===== DEPOSITO =====");
                     System.out.print("Digite o valor do depósito: ");
                     double deposito = scanner.nextDouble();
-                    conta.depositar(deposito);
-                    System.out.println(conta.mostrarInfoSaldo());
+                    System.out.println(conta.depositar(deposito));
                     break;
                 case 4:
                     System.out.println("\n===== SAQUE =====");
                     System.out.print("Digite o valor do saque: ");
                     double saque = scanner.nextDouble();
-                    conta.sacar(saque);
-                    System.out.println(conta.mostrarInfoSaldo());
+                    System.out.println(conta.sacar(saque));
                     break;
                 case 5:
                     System.out.println("\n===== PAGAR BOLETO =====");
                     System.out.print("Digite o valor do boleto: ");
                     double valorBoleto = scanner.nextDouble();
-                    conta.pagarBoleto(valorBoleto);
-                    System.out.println(conta.mostrarInfoSaldo());
+                    System.out.println(conta.pagarBoleto(valorBoleto));
+                    break;
+                case 6:
+                    System.out.println("\n===== TAXA PENDENTE =====");
+                    System.out.println(conta.mostrarInfoTaxaPendente());
                     break;
                 case 0:
                     System.out.println("Saindo...");
