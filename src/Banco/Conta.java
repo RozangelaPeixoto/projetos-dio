@@ -35,18 +35,6 @@ public class Conta {
         return mostrarInfoSaldo();
     }
 
-    private String gerenciarChequeEspecial(double deposito){
-        double valorUsadoChequeEspecial = valorUsadoDoChequeEspecial();
-        double cobrancaChequeEspecial = calcularCobrancaChequeEspecial(valorUsadoChequeEspecial);
-        if(depositoCobreTudo(deposito, cobrancaChequeEspecial, valorUsadoChequeEspecial)){
-            lidarComDepositoCobreTudo(deposito, cobrancaChequeEspecial, valorUsadoChequeEspecial);
-        }
-        else{
-            lidarComDepositoParical(deposito, cobrancaChequeEspecial, valorUsadoChequeEspecial);
-        }
-       return registrarInfoTaxaChequeEspecial(cobrancaChequeEspecial, taxaPendente) + "\n" +  mostrarInfoSaldo();
-    }
-
     public String sacar(double valor){
         double saldoTotal = saldo + chequeEspecial;
         if(valor <= saldo) {
@@ -63,6 +51,18 @@ public class Conta {
 
     public String pagarBoleto(double valor){
         return sacar(valor);
+    }
+
+    private String gerenciarChequeEspecial(double deposito){
+        double valorUsadoChequeEspecial = valorUsadoDoChequeEspecial();
+        double cobrancaChequeEspecial = calcularCobrancaChequeEspecial(valorUsadoChequeEspecial);
+        if(depositoCobreTudo(deposito, cobrancaChequeEspecial, valorUsadoChequeEspecial)){
+            lidarComDepositoCobreTudo(deposito, cobrancaChequeEspecial, valorUsadoChequeEspecial);
+        }
+        else{
+            lidarComDepositoParical(deposito, cobrancaChequeEspecial, valorUsadoChequeEspecial);
+        }
+        return registrarInfoTaxaChequeEspecial(cobrancaChequeEspecial, taxaPendente) + "\n" +  mostrarInfoSaldo();
     }
 
     private void lidarComDepositoCobreTudo(double deposito, double cobrancaTaxa, double valorUsado){
@@ -92,6 +92,10 @@ public class Conta {
         return valorUsado * TAXA_CHEQUE_ESPECIAL;
     }
 
+    private double valorUsadoDoChequeEspecial(){
+        return valorChequeEspecial - chequeEspecial;
+    }
+
     private boolean estaUsandoChequeEspecial(){
         return chequeEspecial < valorChequeEspecial;
     }
@@ -100,16 +104,16 @@ public class Conta {
         return deposito > cobrancaTaxa + valorUsado;
     }
 
-    private boolean depositoCobreParcial(double deposito, double valorUsado){
-        return deposito >= valorUsado;
-    }
-
     private boolean temTaxaPendente(){
         return taxaPendente > 0;
     }
 
-    private double valorUsadoDoChequeEspecial(){
-        return valorChequeEspecial - chequeEspecial;
+    private String registrarInfoTaxaChequeEspecial(double cobrancaTaxa, double taxaPendente){
+        String msg = "Taxa do cheque especial de R$" + cobrancaTaxa;
+        if(taxaPendente == 0) { return msg; }
+        return msg + """
+                    \nDevido a falta de saldo a taxa ficou pendente.
+                    Quando houver saldo na conta ela será debitada.""";
     }
 
     public String mostrarInfoSaldo() {
@@ -118,6 +122,7 @@ public class Conta {
                 " | " +
                 mostrarInfoChequeEspecial();
     }
+
     public String mostrarInfoChequeEspecial() {
         StringBuilder sb = new StringBuilder();
         if(estaUsandoChequeEspecial()){
@@ -129,14 +134,6 @@ public class Conta {
                 .append(consultarChequeEspecial());
 
         return sb.toString();
-    }
-
-    private String registrarInfoTaxaChequeEspecial(double cobrancaTaxa, double taxaPendente){
-        String msg = "Taxa do cheque especial de R$" + cobrancaTaxa;
-        if(taxaPendente == 0) { return msg; }
-        return msg += """
-                    \nDevido a falta de saldo a taxa ficou pendente.
-                    Quando houver saldo na conta ela será debitada.""";
     }
 
     public String mostrarInfoTaxaPendente() {
